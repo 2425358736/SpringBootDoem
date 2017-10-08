@@ -49,6 +49,7 @@ public class IndexController extends BaseController{
     public Map<String, Object> index(Integer id) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id", id);
+        System.out.println(iRedisService.get("lzq"));
         return map;
     }
 
@@ -59,6 +60,7 @@ public class IndexController extends BaseController{
         User user = userMapper.selectByPrimaryKey(new Long("1"));
         modelMap.put("name", "liuzhiqiang");
         modelMap.put("SysUser", user);
+        System.out.println(iRedisService.get("lzq"));
         return new ModelAndView("index", modelMap);
     }
 
@@ -98,8 +100,10 @@ public class IndexController extends BaseController{
             subject.login(usernamePasswordToken);   //完成登录
             SysUser user=(SysUser) subject.getPrincipal();
             iRedisService.set(user.getLoginName(),user.getId().toString());
+            System.out.println(iRedisService.get(user.getLoginName()));
             session.setAttribute("user", user);
             // response.sendRedirect("index");
+            map.put("code","202");
             map.put("data","登陆成功");
             return map;
         } catch(Exception e) {
