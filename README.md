@@ -79,4 +79,15 @@ public class SpringBootAppliction extends WebMvcConfigurerAdapter implements Com
 ```
 ==注意：     SpringBootAppliction类不能直接放在Java目录下==
 ##### idea 配置启动项
-![image](D:/我的文档/我的文档/Tencent%20Files/2425358736/FileRecv/MobileFile/Image/]%7B9GT8P~O%7B$$2_E~73_ZLF4.png)
+![image](https://note.youdao.com/yws/api/personal/file/79593EDCAD7B40528A16B5DAEFEF3BE4?method=download&shareKey=31d3dd0182434b859d5498bf87a0f3d6)
+
+点击edit configuration
+
+![image](https://note.youdao.com/yws/api/personal/file/72E933D20D2741DF8ED6DAE94FED0D64?method=download&shareKey=951d926b8f591b7431f33f7e380dc139)
+
+##### 启动后 浏览器输入 http://localhost:8080/test
+
+![image](https://note.youdao.com/yws/api/personal/file/3AE8F67079E7448798623310EA0540AE?method=download&shareKey=951d926b8f591b7431f33f7e380dc139)
+
+
+第一阶段Springboot完毕
