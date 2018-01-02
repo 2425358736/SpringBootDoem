@@ -144,7 +144,7 @@ public class IndexController {
     @RequestMapping("/index")
     ModelAndView index(ModelMap modelMap) {
         Map<String,Object> map = new HashMap<String,Object>();
-        map.put("zuzhe","刘志强");
+        map.put("userName","刘志强");
         map.put("时间",new Date());
         modelMap.put("map",map);
         return new ModelAndView("index", modelMap);
@@ -205,7 +205,7 @@ border-color:#09F;}
     </tr> 
     <tr> 
      <td width="116">姓&nbsp;名</td> 
-     <td width="134">${map.zuzhe}</td>
+     <td width="134">${map.userName}</td>
      <td width="79">性&nbsp;别</td> 
      <td width="166">男</td> 
      <td width="129" rowspan="5"><img src="https://avatars2.githubusercontent.com/u/25731425?s=40&v=4" width="105" height="150" alt="1" /></td>
@@ -267,3 +267,154 @@ border-color:#09F;}
 ![image](https://note.youdao.com/yws/api/personal/file/3E1D938C6DF243B99022DF6E028F62EB?method=download&shareKey=951d926b8f591b7431f33f7e380dc139)
 
 ### 至此 springboot实现spring mvc 的功能已全部实现
+
+### 2 SpringBoot mybatis整合
+#### 引入mybatis依赖开发包
+```
+        <!--mybatis-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId> mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.21</version>
+        </dependency>
+        <!--end-->
+```
+#### pom.xml 配置mybatis-generator插件，数据库表自动生成 dao xml model
+```
+<!--mybatis-generator数据表自动生成-->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId> mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.21</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.mybatis.generator</groupId>
+                        <artifactId>mybatis-generator-core</artifactId>
+                        <version>1.3.5</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <!--允许移动生成的文件 -->
+                    <verbose>true</verbose>
+                    <!-- 是否覆盖 -->
+                    <overwrite>true</overwrite>
+                    <!-- 自动生成的配置 -->
+                    <configurationFile>
+                        src/main/resources/mybatis/generatorConfig.xml</configurationFile>
+                </configuration>
+            </plugin>
+```
+#### 创建mybatis-generator配置文件generatorConfig.xml
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="MysqlContext" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <!--配置数据源-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/test"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+        <!--model所在目录-->
+        <javaModelGenerator targetPackage="com.liuzhiqiang.model" targetProject="src\main\java">
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        <!--xml所在目录-->
+        <sqlMapGenerator targetPackage="mappers"  targetProject="src\main\resources"/>
+        <!--dao所在目录-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.liuzhiqiang.dao"  targetProject="src\main\java"/>
+
+        <table tableName="%">
+            <generatedKey column="id" sqlStatement="Mysql"/>
+        </table>
+    </context>
+</generatorConfiguration>
+```
+#### 点击下图所标注的
+![image](https://note.youdao.com/yws/api/personal/file/39CC0476126A4EA29C8209C6B352E2E8?method=download&shareKey=951d926b8f591b7431f33f7e380dc139)
+#### 会自动创建
+![image](https://note.youdao.com/yws/api/personal/file/5815B3D14C3F4E6FA7E87E2B626E1B7B?method=download&shareKey=951d926b8f591b7431f33f7e380dc139)
+
+
+
+#### application.yml 配置数据源 和 mybatis
+```
+spring:
+  application:
+    name: SpringBoot
+  #freemarker 模板引擎配置
+  freemarker:
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+    template-loader-path: classpath:/templates
+#druid数据源相关配置配置
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;tinyInt1isBit=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    type: org.apache.tomcat.jdbc.pool.DataSource
+
+    #连接池的配置信息
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+mybatis:
+  type-aliases-package: com.liuzhiqiang.model
+  mapperLocations: classpath:/mappers/**/*.xml
+#端口号修改
+server:
+  port: 8484
+```
+#### 修改 IndexController
+```
+@RestController
+public class IndexController {
+    @Autowired
+    public UserMapper userMapper;
+    @RequestMapping("/index")
+    ModelAndView index(ModelMap modelMap) {
+        User user = userMapper.selectByPrimaryKey(Long.parseLong("1"));
+        modelMap.put("map",user);
+        return new ModelAndView("index", modelMap);
+    }
+}
+```
+#### 启动项目 浏览器访问 http://localhost:8484
+#### 至此 springboot简单搭建结束
