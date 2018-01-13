@@ -109,6 +109,16 @@
             <artifactId>JSONUtil</artifactId>
             <version>1.10.4</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        <!--,用于检测JSON格式的响应数据-->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

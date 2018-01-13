@@ -34,7 +34,7 @@ public class IndexController extends BaseController{
     @Autowired
     private IRedisService iRedisService;
 
-    @RequiresPermissions("sys:eeerdd")
+    // @RequiresPermissions("sys:eeerdd")
     @RequestMapping(value = "/index/{id}")
     //@CrossOrigin //跨域返回json注解
     public Map<String, Object> view(@PathVariable Integer id) {
@@ -43,10 +43,10 @@ public class IndexController extends BaseController{
         return map;
     }
 
-    @RequiresPermissions("sys:view")
+    // @RequiresPermissions("sys:view")
     @RequestMapping(value = "/index", method = RequestMethod.POST)
     @ResponseBody //返回json注解
-    public Map<String, Object> index(Integer id) {
+    public Map<String, Object> index(HttpServletRequest request,int id,String name) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id", id);
         System.out.println(iRedisService.get("lzq"));
